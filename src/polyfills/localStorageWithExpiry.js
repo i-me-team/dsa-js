@@ -1,6 +1,6 @@
 class MyLocalStorage {
   getItem(key) {
-    const result = window.localStorage.getItem(key);
+    const result = JSON.parse(window.localStorage.getItem(key));
     if (result) {
       if (result.expireAt <= Date.now()) {
         this.removeItem(key);

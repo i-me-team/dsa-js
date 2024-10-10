@@ -1,17 +1,20 @@
 function loadImage(url, callback) {
-  const img = new Image();
-  img.onload = () => callback(null, img);
-  img.onerror = () => callback(new Error('Failed to load image'));
-  img.src = url;
+  const image = new Image(300, 300);
+  image.onload = callback(null, image);
+  image.onerror = callback(new Error('Unable to load image'));
+  // async operation
+  image.src = url;
 }
 
-// loadImage('/path/to/jsdk.jpg', (err, img) => {
-//   if(err){
-//     console.error('Some error happened', err);
+// loadImage("https://picsum.photos/300/300.jpg", (err, img) => {
+//   if (err) {
+//     console.error(err.message);
 //     return;
 //   }
 //   document.body.appendChild(img);
 // });
+
+// utility
 
 function promisify(func) {
   return function (...args) {
@@ -24,8 +27,8 @@ function promisify(func) {
   };
 }
 
-const loadImgCall = promisify(loadImage);
+const promisifiedLoadImage = promisify(loadImage);
 
-loadImgCall()
+promisifiedLoadImage('https://picsum.photos/300/300.jpg')
   .then((img) => document.body.appendChild(img))
-  .catch((err) => console.error('Some error happened', err));
+  .catch((err) => console.error(err.message));
