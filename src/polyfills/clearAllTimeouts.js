@@ -12,8 +12,14 @@ export function clearAllTimeouts1() {
 export function customTimeoutWrapper() {
   const timerIds = new Set();
 
-  function myTimeout(func, wait) {
-    const timerId = window.setTimeout(func, wait);
+  function myTimeout(func, wait, ...args) {
+    let timerId;
+    // Memory safe implementation.
+    const onComplete = () => {
+      timerIds.delete(timerId);
+      func.call(this, ...args);
+    };
+    timerId = window.setTimeout(onComplete, wait);
     timerIds.add(timerId);
     return timerId;
   }
